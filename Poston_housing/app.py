@@ -3,7 +3,6 @@ import numpy as np
 import streamlit as st
 import pandas as pd
 
-# 1. إعدادات الصفحة الأساسية
 st.set_page_config(
     page_title="Valuer.ai | Boston Real Estate Intelligence",
     page_icon="💎",
@@ -11,13 +10,12 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# 2. نظام التنسيق الزجاجي الشامل (Glassmorphism CSS Isolation)
+
 st.markdown(
     """
     <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
 
-    /* توحيد الخط والخلفية العميقة لجميع الأوضاع */
     html, body, [data-testid="stAppViewContainer"] {
         font-family: 'Plus Jakarta Sans', sans-serif !important;
         background: #070b14 !important;
@@ -29,7 +27,7 @@ st.markdown(
         backdrop-filter: blur(12px);
     }
 
-    /* إصلاح ألوان النصوص والعناوين تماماً لجميع الأوضاع */
+   
     h1, h2, h3, h4, h5, h6, p, label, span, div {
         color: #f8fafc !important;
     }
@@ -38,7 +36,7 @@ st.markdown(
         color: #94a3b8 !important;
     }
 
-    /* خلفية هيدر الصفحة بتأثير التدرج الجذاب */
+   
     .hero-title {
         font-size: 2.8rem;
         font-weight: 800;
@@ -56,7 +54,7 @@ st.markdown(
         font-weight: 400;
     }
 
-    /* تصميم بطاقات الإدخال الزجاجية */
+  
     .input-card {
         background: rgba(15, 23, 42, 0.6);
         border: 1px solid rgba(255, 255, 255, 0.08);
@@ -67,7 +65,7 @@ st.markdown(
         margin-bottom: 20px;
     }
 
-    /* إعادة تنسيق حقول الإدخال */
+   
     .stNumberInput div[data-baseweb="input"] {
         background-color: rgba(30, 41, 59, 0.8) !important;
         border: 1px solid rgba(255, 255, 255, 0.12) !important;
@@ -81,7 +79,7 @@ st.markdown(
         box-shadow: 0 0 15px rgba(56, 189, 248, 0.25) !important;
     }
 
-    /* تصميم زر الحساب النيون */
+ 
     .stButton>button {
         width: 100%;
         background: linear-gradient(135deg, #0284c7 0%, #4f46e5 100%) !important;
@@ -102,7 +100,7 @@ st.markdown(
         background: linear-gradient(135deg, #0369a1 0%, #4338ca 100%) !important;
     }
 
-    /* تصميم بطاقة النتيجة البارزة (Hero Output Glass Card) */
+   
     .result-card {
         background: linear-gradient(165deg, rgba(30, 41, 59, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
         border: 1px solid rgba(56, 189, 248, 0.2);
@@ -163,7 +161,7 @@ st.markdown(
         margin: 4px;
     }
 
-        /* إخفاء الهيدر والقائمة العلوية بالكامل لمنع التغيير للوضع النهاري */
+       
     header[data-testid="stHeader"] {
         display: none !important;
     }
@@ -177,7 +175,7 @@ st.markdown(
     }
 
     
-        /* إجبار حقول الإدخال على المظهر المظلم دائماً مهما كان وضع المتصفح */
+       
     div[data-baseweb="input"] {
         background-color: #0f172a !important;
         border: 1px solid rgba(56, 189, 248, 0.2) !important;
@@ -189,7 +187,7 @@ st.markdown(
         color: #ffffff !important;
     }
 
-    /* تعديل خلفية أزرار الزيادة والنقصان (+ و -) داخل الحقول */
+  
     div[data-baseweb="input"] button {
         background-color: #1e293b !important;
         color: #ffffff !important;
@@ -208,7 +206,6 @@ st.markdown(
 )
 
 
-# 3. تحميل النموذج
 @st.cache_resource
 def load_model():
   return joblib.load("boston_housing_model.pkl")
@@ -216,7 +213,7 @@ def load_model():
 
 model = load_model()
 
-# 4. رأس الصفحة (Hero Header)
+
 st.markdown(
     '<div class="hero-title">A smarter way to see home value.</div>',
     unsafe_allow_html=True,
@@ -227,7 +224,6 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# 5. التنسيق في عمودين متوازيين
 col_input, col_output = st.columns([1.1, 0.9], gap="large")
 
 with col_input:
@@ -235,7 +231,6 @@ with col_input:
       '<div class="badge">Property Specs</div>', unsafe_allow_html=True
   )
 
-  # حقل عدد الغرف
   rm = st.number_input(
       "01 Average Rooms (RM)",
       min_value=1.0,
@@ -244,8 +239,7 @@ with col_input:
       step=0.1,
       help="Average number of rooms per dwelling",
   )
-
-  # حقل نسبة الفقر
+  
   lstat = st.number_input(
       "02 Neighborhood Lower-Status % (LSTAT)",
       min_value=0.0,
@@ -255,7 +249,6 @@ with col_input:
       help="Percentage of homeowners considered lower status",
   )
 
-  # حقل نسبة الطلاب للمعلمين
   ptratio = st.number_input(
       "03 Pupil-Teacher Ratio (PTRATIO)",
       min_value=1.0,
@@ -271,15 +264,15 @@ with col_input:
 with col_output:
   st.markdown('<div class="badge">Valuation Output</div>', unsafe_allow_html=True)
 
-  # 1. تنفيذ التنبؤ فقط عند الضغط على الزر
+ 
   if predict_btn:
-    # استخدام DataFrame لتفادي تحذيرات التيرمينال
+     
     features = pd.DataFrame(
         [[rm, lstat, ptratio]], columns=['RM', 'LSTAT', 'PTRATIO']
     )
     predicted_price = model.predict(features)[0]
 
-    # تحديد التصنيف بناءً على السعر المحسوب
+    
     if predicted_price >= 500000:
       segment = 'Luxury Segment 🌟'
     elif predicted_price >= 300000:
@@ -287,7 +280,7 @@ with col_output:
     else:
       segment = 'Affordable Entry 🏢'
 
-    # عرض كارت النتيجة النهائي
+    
     st.markdown(
         f"""
         <div class="result-card">
@@ -306,7 +299,7 @@ with col_output:
         unsafe_allow_html=True,
     )
   else:
-    # 2. الكارت الافتراضي قبل الضغط على الزر
+ 
     st.markdown(
         """
         <div class="result-card">
